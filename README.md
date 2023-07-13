@@ -1,7 +1,7 @@
 # CRUD範例
 ## 資料庫
 . 資料庫名 myProject
-. 資料表內容在 data 中
+. 資料表內容在 (/data) 中
 ## 存取內容
 1. 使用者 (/user)
 2. 分類 (/category)
