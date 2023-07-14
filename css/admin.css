@@ -6,6 +6,8 @@ nav.nav1{
   background-color: #92e3fa;
   border-radius: 0 10px 10px 0;
   transition: all 0.2s;
+  transform: translateX(-100%);
+  z-index: 1;
 }
 nav.nav1 ul{
   list-style-type: none;
@@ -41,7 +43,7 @@ nav.nav1 .r1{
   z-index: -1;
 }
 nav.nav1.close{
-  transform: translateX(-100%);
+  transform: translateX(0);
 }
 
 
