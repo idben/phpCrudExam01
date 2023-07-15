@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connect.php"); // 引用連線
 require_once("../utilities/alertFunc.php"); // 引用常用函數
 
@@ -13,8 +14,17 @@ if (isset($_GET["page"])) {
 // 計算初始筆數
 $pageStart = ($page - 1) * $perPage;
 
-$sql = "SELECT * FROM category WHERE isValid = 1 LIMIT $pageStart, $perPage";
-$sqlAll = "SELECT * FROM category WHERE `isValid` = 1";
+// 判斷使用者與其額外的 SQL 語句
+$uid = $_SESSION["user"]["id"];
+$level = $_SESSION["user"]["level"];
+if($level == 9){
+  $uSQL = "";
+}else{
+  $uSQL = "`uid` = $uid AND";
+}
+
+$sql = "SELECT * FROM category WHERE $uSQL isValid = 1 LIMIT $pageStart, $perPage";
+$sqlAll = "SELECT * FROM category WHERE $uSQL `isValid` = 1";
 try {
   $result = $conn->query($sql);
   $userCount = $result->num_rows;

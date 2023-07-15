@@ -1,8 +1,11 @@
 <?php
+session_start();
 require_once("../connect.php"); // 引用連線
 require_once("../utilities/alertFunc.php"); // 引用常用函數
 
-$sql = "SELECT * FROM `category` WHERE `isValid` = 1";
+$uid = $_SESSION["user"]["id"];
+
+$sql = "SELECT * FROM `category` WHERE `uid` = $uid AND `isValid` = 1";
 $result = $conn->query($sql);
 $categoryRows = $result->fetch_all(MYSQLI_ASSOC);
 $categoryCount = $result->num_rows;

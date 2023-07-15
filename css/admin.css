@@ -96,6 +96,10 @@ nav.nav1.close{
   border-radius: 10px;
   border: 1px solid #ccc;
 }
+.user.update.satrt{
+  width: 30px;
+  height: 30px;
+}
 
 
 .category.data{
@@ -181,6 +185,7 @@ nav.nav1.close{
   border-radius: 10px;
   padding: 5px;
   border: 1px solid #525454;
+  object-fit: cover;
 }
 
 

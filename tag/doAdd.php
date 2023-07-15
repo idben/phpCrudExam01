@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connect.php"); // 引用連線
 require_once("../utilities/alertFunc.php"); // 引用常用函數
 
@@ -27,11 +28,12 @@ if($result == "error"){
 
 // 整理表單變數
 $name = htmlspecialchars($_POST["name"]);
+$uid = $_SESSION["user"]["id"];
 
 // 整理 SQL
 $sql = "INSERT INTO `tag` 
-  (`id`, `name`, `createTime`) VALUES 
-  (NULL, '$name', CURRENT_TIMESTAMP);";
+  (`id`, `uid`, `name`, `createTime`) VALUES 
+  (NULL, $uid, '$name', CURRENT_TIMESTAMP);";
 // 寫入資料庫
 try {
   $conn->query($sql);

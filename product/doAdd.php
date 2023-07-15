@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connect.php"); // 引用連線
 require_once("../utilities/alertFunc.php"); // 引用常用函數
 
@@ -18,12 +19,13 @@ if(isset($_POST["tag"])){
 }else{
   $tags = array();
 }
+$uid = $_SESSION["user"]["id"];
 
 
 // 整理 SQL
 $sql = "INSERT INTO `product` 
-  (`id`, `name`, `price`, `category`, `info`, `createTime`) VALUES 
-  (NULL, '$name', $price, $category, '$info', CURRENT_TIMESTAMP);";
+  (`id`, `uid`, `name`, `price`, `category`, `info`, `createTime`) VALUES 
+  (NULL, $uid, '$name', $price, $category, '$info', CURRENT_TIMESTAMP);";
 
 // 寫入資料庫
 try {

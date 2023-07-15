@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connect.php");
 require_once("../utilities/alertFunc.php");
 
@@ -14,12 +15,24 @@ $password = $_POST["password"];
 $password2 = $_POST["password2"];
 $password3 = $_POST["password3"];
 $name = htmlspecialchars($_POST["name"]); // 移除 html 標籤
-$level = $_POST["level"];
+// 判斷有沒有 level 這個表單變數，有的話就設定同名變數為表單變數
+// 沒有的話就什麼都不做，這時候就不會有 $level 這個變數
+if(isset($_POST["level"])){
+  $level = intval($_POST["level"]);
+}
 $img = $_POST["img"];
 
 // 檢查是密碼是否正確
 $pwdCheck = false;
-$sql = "SELECT * FROM user WHERE id = $id";
+if($_SESSION["user"]["level"] == 9){
+  // 如果是超級帳號，是可以管理別人帳號的，所以密碼是要判別超級超帳號的密碼
+  $aid = $_SESSION["user"]["id"];
+  $sql = "SELECT * FROM user WHERE id = $aid";
+}else{
+  // 其他的狀況則是自己修改自己資料，所以是判斷自己密碼
+  $sql = "SELECT * FROM user WHERE id = $id";
+}
+
 try {
   $result = $conn->query($sql);
   $row = $result->fetch_assoc();
@@ -56,13 +69,16 @@ if($_FILES["myFile"]["error"] == 0){
     $newImg = $newFileName;
   }
 }
+// 如果有上傳新圖片，把變數 $img 設為新圖片
+// 沒有的話則維持原圖片
+// 這樣寫的話不管有沒有上傳圖片都可以用變數 $img
+$img = ($newImg != "") ? $newImg : $img;
 
-// 由上傳檔的的檔名來組合不同的 SQL
-if($newImg != ""){
-  $sql = "UPDATE user SET `name` = '$name', `password` = '$password', `level` = '$level', `img` = '$newImg', `modifyTime` = CURRENT_TIMESTAMP WHERE id = $id;";
-}else{
-  $sql = "UPDATE user SET `name` = '$name', `password` = '$password', `level` = '$level', `img` = '$img', `modifyTime` = CURRENT_TIMESTAMP WHERE id = $id;";
-}
+// SQL 分段寫
+// 第二句判斷有沒有變數 $level，有的話把 `level`=$level 的語句加入
+$sql = "UPDATE user SET `name` = '$name', `password` = '$password', " . 
+    (isset($level) ? "`level` = $level, " : "") . 
+    "`img` = '$img', `modifyTime` = CURRENT_TIMESTAMP WHERE id = $id;";
 
 // 寫入資料庫，將結果存在變數 error
 $error = "";
@@ -71,15 +87,26 @@ try {
 } catch (mysqli_sql_exception $exception) {
   $error = $exception->getMessage();
 }
+// 更新 SESSION，會讓大頭照及顯示名稱即時切換
+if($_SESSION["user"]["id"] == $id){
+  $_SESSION["user"]["name"] = $name;
+  $_SESSION["user"]["img"] = $img;
+}
 
-$conn->close();
 
 // 由變數 error 來判斷要轉跳回列表，或失敗了回上一頁
+// 上一頁是動態判斷
+// 超級管理者有可能是從列表頁進來
+// 一般使用者只會從 update.php 進來
+$url = "./update.php?id=$id";
+if($_SESSION["user"]["level"] == 9){
+  $url = "./list.php";
+}
 if($error === ""){
-  alertAndGoToList("資料修改成功");
+  alertAndBackToPage("資料修改成功", $url);
   exit;
 }else{
-  alertAndGoBack("資料修改錯誤：" .$error);
+  alertAndBackToPage("資料修改錯誤：" .$error, $url);
   exit;
 }
 

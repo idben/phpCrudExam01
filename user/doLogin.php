@@ -11,6 +11,8 @@ if(!isset($_POST["email"])){
 $email = $_POST["email"];
 $password1 = $_POST["password1"];
 $password2 = $_POST["password2"];
+$status = $_POST["status"];
+$uid = $_POST["uid"];
 
 
 $sql = "SELECT * FROM user WHERE email = '$email'";
@@ -21,6 +23,7 @@ try {
   if($userCount > 0){
     $row = $result->fetch_assoc();
     if (password_verify($password1, $row["password"])) {
+      $id = $row["id"];
       $_SESSION["user"] = [
         "id"=>$row["id"],
         "name"=>$row["name"],
@@ -29,7 +32,13 @@ try {
         "img"=>$row["img"]
       ];
       unset($_SESSION["error"]);
-      header("location: ../admin.php");
+      if($status == "1"){
+        header("location: ../cart/add.php");
+      }else if($status == "2"){
+        header("location: ../index.php?uid=$uid");
+      }else{
+        header("location: ./update.php?id=$id");
+      }
     } else {
       loginFailed();
     }

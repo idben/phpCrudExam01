@@ -10,6 +10,8 @@ if(isset($_SESSION["error"])){
     $stopLogin = true;
   }
 }
+$status = isset($_GET["status"])?$_GET["status"]:0;
+$uid = isset($_GET["uid"])?$_GET["uid"]:"";
 ?>
 <!doctype html>
 <html lang="en">
@@ -36,6 +38,8 @@ if(isset($_SESSION["error"])){
         <div class="tip text-danger">您已超過登入錯誤次數，請稍後再登入</div>
       <?php endif; ?>
       <form action="./doLogin.php" method="post">
+        <input type="hidden" name="status" value="<?=$status?>">
+        <input type="hidden" name="uid" value="<?=$uid?>">
         <input type="text" name="email" class="form-control mb-1" placeholder="使用者帳號">
         <input type="password" name="password1" class="form-control mb-1" placeholder="使用者密碼">
         <input type="password" name="password2" class="form-control mb-1" placeholder="再輸入一次使用者密碼">

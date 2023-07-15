@@ -1,0 +1,26 @@
+.pt{
+  --sn-width: 80px;
+  --num-width: 130px;
+  --price-width: 100px;
+  --ctrl-width: 80px;
+  display: flex;
+}
+.pt .sn{
+  width: var(--sn-width);
+}
+.pt .price{
+  width: var(--price-width);
+}
+.pt .num{
+  width: var(--num-width);
+}
+.pt .ctrl{
+  text-align: center;
+  width: var(--ctrl-width);
+}
+.pt .name{
+  width: calc(100% - var(--sn-width) - var(--num-width) - var(--ctrl-width));
+}
+.head{
+  padding: 2px;
+}

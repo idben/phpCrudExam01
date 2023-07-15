@@ -1,4 +1,5 @@
 <?php
+session_start();
 require_once("../connect.php"); // 引用連線
 require_once("../utilities/alertFunc.php"); // 引用常用函數
 
@@ -12,6 +13,15 @@ if (isset($_GET["page"])) {
 }
 // 計算初始筆數
 $pageStart = ($page - 1) * $perPage;
+
+// 判斷使用者與其額外的 SQL 語句
+$uid = $_SESSION["user"]["id"];
+$level = $_SESSION["user"]["level"];
+if($level == 9){
+  $uSQL = "";
+}else{
+  $uSQL = "`uid` = $uid AND";
+}
 
 $sql = "SELECT * FROM tag WHERE isValid = 1 LIMIT $pageStart, $perPage";
 $sqlAll = "SELECT * FROM tag WHERE `isValid` = 1";
@@ -59,8 +69,10 @@ try {
             <div class="name"><?=$row["name"]?></div>
             <div class="cTime"><?=$row["createTime"]?></div>
             <div class="ctrl text-center">
-              <div href="#" class="btn btn-danger btn-sm btn-del" idn="<?=$row["id"]?>">刪除</div>
-              <a href="./update.php?id=<?=$row["id"]?>" class="btn btn-primary btn-sm">管理</a>
+              <?php if($uid==$row["uid"] || $level==9): ?>
+                <div href="#" class="btn btn-danger btn-sm btn-del" idn="<?=$row["id"]?>">刪除</div>
+                <a href="./update.php?id=<?=$row["id"]?>" class="btn btn-primary btn-sm">管理</a>
+              <?php endif; ?>
             </div>
           </div>
         <?php endforeach; ?>

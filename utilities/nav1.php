@@ -29,7 +29,8 @@ if(!isset($_SESSION["user"])){
     <li><a href="../category/list.php">分類管理</a></li>
     <li><a href="../tag/list.php">標籤管理</a></li>
     <li><a href="../product/list.php">產品管理</a></li>
-    <li><a href="../order/list.php">訂單管理</a></li>
+    <li><a href="../order/list.php">購買記錄</a></li>
+    <li><a href="../order/list2.php">訂單管理</a></li>
   </ul>
 </nav>
 <script>
